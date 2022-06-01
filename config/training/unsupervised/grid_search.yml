@@ -1,0 +1,606 @@
+baseline: &baseline
+  # Liste von Features, die nach erfolgtem Clustering mit verglichen werden sollen (Lernziele)
+  target_features:
+    - OSTM
+    #- OSTM_above_24
+    - RFSTM
+    #- EFSTM
+    - CR1_Y
+    - CR1_N
+
+  # Liste von Feature, die gefiltret, also keinen Einfluß haben sollen
+  drop:
+    - D16BMB # angenommen wir sind nicht schon am Tag 16 vorbeigekommen
+    - IT1STDTC # ungeachtet des absoluten Beginns der Induktionsther.
+    - CD34
+    - CD34U
+    - CD34SRC
+
+    # Klassifikationen
+    - ELNRisk
+    - ECOG
+    - FAB
+    - WHO
+    - CGELN
+    - CGSTUD
+    - ELNRisk
+    - ECOG
+    - FAB
+    - WHO
+    - CGELN
+    - CGSTUD
+    - CD34
+    - CD34SRC_all cells
+    - CD34SRC_blast gate
+    - CD34SRC_unknown
+    - AMLSTAT_unknown
+    - EXAML_unknown
+    - FLT3I_unknown
+    - BMB_unknown
+    - CEBPA_unknown
+    - FLT3T_unknown
+    - IDH1T_unknown
+    - smCEBPA_unknown
+    - dmCEBPA_unknown
+    - GATA1_unknown
+    - GATA2_unknown
+    - CEBPA.bZIP_unknown
+    - CEBPA.TAD2_unknown
+    - CEBPA.TAD1_unknown
+    - IDH2T_unknown
+    - CGCX_unknown
+    - CEBPASTAT_unknown
+    - CEBPADM_unknown
+    - ASXL1_unknown
+    - BCORL1_unknown
+    - BCOR_unknown
+    - CALR_unknown
+    - CEBPA.NGS_unknown
+    - DNMT3A_unknown
+    - CGNK_unknown
+    - EZH2_unknown
+    - EZH2_N
+    - FEV_unknown
+    - FLT3.ITD_unknown
+    - FLT3.TKD_unknown
+    - IDH1_unknown
+    - IDH2_unknown
+    - KIT_unknown
+    - KRAS_unknown
+    - NPM1_unknown
+    - NPM1.NGS_unknown
+    - PBB_unknown
+    - PHF6_unknown
+    - PTPN11_unknown
+    - RAD21_unknown
+    - RUNX1_unknown
+    - SF3B1_unknown
+    - STAG2_unknown
+    - TET2_unknown
+    - TP53_unknown
+    - WT1_unknown
+    - TP53_N
+    - FLT3T_N
+    - NPM1.NGS_N
+    - U2AF1_N
+    - U2AF1_unknown
+    - CEBPADM_N
+    - BRAF_N
+    - NPM1_N
+    - IKZF1_unknown
+    - IKZF1_N
+    - ASXL1_N
+    - RUNX1_N
+    - CGNK_N
+    - CGCX_N
+    - dmCEBPA_N
+    - smCEBPA_N
+    - CEBPA.NGS_N
+    - SF3B1_N
+    - IDH1_N
+    - GATA1_N
+    - GATA2_N
+    - PTPN11_N
+    - CEBPA.TAD1_N
+    - CEBPA.TAD2_N
+    - ZRSR2_N
+    - ZRSR2_unknown
+    - FLT3I_N
+    - PTEN_N
+    - PTEN_unknown
+    - KIT_N
+    - TET2_N
+    - ATRX_unknown
+    - ATRX_N
+    - MPL_unknown
+    - MPL_N
+    - PHF6_N
+    - KRAS_N
+    - FLT3.ITD_N
+    - SRSF2_unknown
+    - SRSF2_N
+    - CALR_N
+    - WT1_N
+    - DNMT3A_N
+    - CUX1_unknown
+    - CUX1_N
+    - RAD21_N
+    - CDKN2A_N
+    - CKDN2A_unknown
+    - JAK2_unknown
+    - JAK2_N
+    - SMC3_unknown
+    - SMC3_N
+    - MYD88_unknown
+    - MYD88_N
+    - SETBP1_unknown
+    - SETBP1_N
+    - CEBPA.bZIP_N
+    - BCOR_N
+    - HRAS_unknown
+    - HRAS_N
+    - CBLB_N
+    - CBL_unknown
+    - CBL_N
+    - KDM6A_N
+    - KDM6A_unknown
+    - CSF3R_N
+    - CSFR3_unknown
+    - FBXW7_N
+    - FBXW7_unknown
+    - PDGFRA_unknown
+    - PDGFRA_N
+    - NRAS_unknown
+    - NRAS_N
+    - NOTCH1_unknown
+    - NOTCH1_N
+    - BCORL1_unknown
+    - BCORL1_N
+    - ETV6_unknown
+    - ETV6_N
+    - IDH2_N
+    - IDH2T_N
+    - IDH1T_N
+    - FLT3.TKD_N
+    - SMC1A_unknown
+    - SMC1A_N
+    - STAG2_N
+    - GNAS_unknown
+    - GNAS_N
+    - CBLB_unknown
+    - CEBPA_N
+    - SFRS2_N
+    - SFRS2_unknown
+    - BRAF_unknown
+    - BRAF
+    - ZRSR2
+    - CEBPA.NGS
+    - CEBPA.bZIP
+    - IHD2T_R140G
+    - IDH2T_R140G_N
+    - MYD88
+    - IDH2T_R140G_Y
+    - MYD88_Y
+    - MPL_Y
+    - MPL
+    - CEBPASTAT_WT
+    - CALR
+    - CALR_Y
+    - IDH1T_R132C
+    - IDH1T_R132C_N
+    - IDH1T_R132C_Y
+    - IDH1T_R132C_unknown
+    - IDH2T_R140G_unknown
+    - t(8;21)_N
+    - t(9;11)_N
+    - t(9;22)_N
+    - t(6;9)_N
+    - del5/5q_N
+    - del7_N
+    - del17_N
+    - IDH2T
+    - FIB
+    - CBLB
+    - EXAML_N
+    - CEBPAdm_Y
+    - CEBPASTAT_double
+    - IDH1T
+    - FIB_Y
+    - FIB_N
+    - FIB_unknown
+    - FEV_N
+    - CEBPADM_Y
+    - CEBPA_Y
+    - CEBPA_N
+    - FEV
+    - inv(16) or t(16;16)_N
+    - NPM1_Y
+    - AMLSTAT_missing
+    - ASXL1_N
+    - ASXL1_missing
+    - ATRX_N
+    - ATRX_missing
+    - BCORL1_N
+    - BCORL1_missing
+    - BCOR_N
+    - BCOR_missing
+    - BMB_missing
+    - BRAF_N
+    - BRAF_missing
+    - CALR_N
+    - CALR_missing
+    - CBLB_N
+    - CBLB_missing
+    - CBL_N
+    - CBL_missing
+    - CD34
+    - CD34SRC_all cells
+    - CD34SRC_blast gate
+    - CD34SRC_missing
+    - CD34SRC_unknown
+    - CDKN2A_N
+    - CDKN2A_missing
+    - CEBPA.NGS_N
+    - CEBPA.NGS_missing
+    - CEBPA.TAD1_N
+    - CEBPA.TAD1_missing
+    - CEBPA.TAD2_N
+    - CEBPA.TAD2_missing
+    - CEBPA.bZIP_N
+    - CEBPA.bZIP_missing
+    - CEBPADM_N
+    - CEBPADM_missing
+    - CEBPASTAT_missing
+    - CEBPA_N
+    - CEBPA_missing
+    - CGCX_N
+    - CGCX_missing
+    - CGNK_N
+    - CGNK_missing
+    - CISTAT_missing
+    - CR1DTC_missing
+    - CR1_N
+    - CSF3R_N
+    - CSF3R_missing
+    - CUX1_N
+    - CUX1_missing
+    - D16BMB
+    - D16BMB_missing
+    - DNMT3A_N
+    - DNMT3A_missing
+    - DTHDTC_missing
+    - ED30_N
+    - ED60_N
+    - EFSDTC_missing
+    - ETV6_N
+    - ETV6_missing
+    - EXAML_N
+    - EXAML_missing
+    - EZH2_N
+    - EZH2_missing
+    - FAB_missing
+    - FBXW7_N
+    - FBXW7_missing
+    - FEV_N
+    - FEV_missing
+    - FLT3.ITD_N
+    - FLT3.ITD_missing
+    - FLT3.TKD_N
+    - FLT3.TKD_missing
+    - FLT3I_N
+    - LT3I_missing
+    - FLT3T_N
+    - FLT3T_missing
+    - GATA1_N
+    - GATA1_missing
+    - GATA2_N
+    - GATA2_missing
+    - GNAS_N
+    - GNAS_missing
+    - HRAS_N
+    - HRAS_missing
+    - IDH1T_R132C
+    - IDH1T_R132C,R132L
+    - IDH1T_R132G
+    - IDH1T_R132H
+    - IDH1T_R132L
+    - IDH1T_R132S
+    - IDH1T_missing
+    - IDH1_N
+    - IDH1_missing
+    - IDH2T_I157L
+    - IDH2T_R140G
+    - IDH2T_R140L
+    - IDH2T_R140Q
+    - IDH2T_R140W
+    - IDH2T_R172K
+    - IDH2T_R172S,H173A
+    - IDH2T_V161L
+    - IDH2T_missing
+    - IDH2_N
+    - IDH2_missing
+    - IKZF1_N
+    - IKZF1_missing
+    - IT1STDTC_missing
+    - JAK2_N
+    - JAK2_missing
+    - KDM6A_N
+    - KDM6A_missing
+    - KIT_N
+    - KIT_missing
+    - KRAS_N
+    - KRAS_missing
+    - MPL_N
+    - MPL_missing
+    - MYD88_N
+    - MYD88_missing
+    - NOTCH1_N
+    - NOTCH1_missing
+    - NPM1.NGS_N
+    - NPM1.NGS_missing
+    - NPM1_N
+    - NPM1_missing
+    - NRAS_N
+    - NRAS_missing
+    - PBB_missing
+    - PDGFRA_N
+    - PDGFRA_missing
+    - PHF6_N
+    - PHF6_missing
+    - PTEN_N
+    - PTEN_missing
+    - PTPN11_N
+    - PTPN11_missing
+    - RAD21_N
+    - RAD21_missing
+    - RFSDTC_missing
+    - RFSSTAT_N
+    - RFSSTAT_missing
+    - RUNX1_N
+    - RUNX1_missing
+    - SETBP1_N
+    - SETBP1_missing
+    - SF3B1_N
+    - SF3B1_missing
+    - SFRS2_N
+    - SFRS2_missing
+    - SMC1A_N
+    - SMC1A_missing
+    - SMC3_N
+    - SMC3_missing
+    - STAG2_N
+    - STAG2_missing
+    - TET2_N
+    - TET2_missing
+    - TP53_N
+    - TP53_missing
+    - U2AF1_N
+    - U2AF1_missing
+    - WHO_missing
+    - WT1_N
+    - WT1_missing
+    - ZRSR2_N
+    - ZRSR2_missing
+    - del17_N
+    - del17_missing
+    - del5/5q_N
+    - del5/5q_missing
+    - del7_N
+    - del7_missing
+    - dmCEBPA_N
+    - dmCEBPA_missing
+    - inv(16) or t(16;16)_N
+    - inv(16) or t(16;16)_missing
+    - inv(3) or t(3;3)_N
+    - inv(3) or t(3;3)_missing
+    - smCEBPA_N
+    - smCEBPA_missing
+    - t(6;9)_N
+    - t(6;9)_missing
+    - t(8;21)_N
+    - t(8;21)_missing
+    - t(9;11)_N
+    - t(9;11)_missing
+    - t(9;22)_N
+    - t(9;22)_missing
+    - CSF3R_unknown
+    - CDKN2A_unknown
+
+
+
+  # Liste der zu untersuchenden von Ziel-Dimensionalitäten
+  target_dimensionalities:
+    #- 1
+    - 2
+    - 3
+    - 4
+    - 5
+
+  # Liste der zu untersuchenden von Tansformationsverfahren
+  transformation:
+    PrincipalComponentAnalysis:
+    IncrementalPrincipalComponentAnalysis:
+    SparsePrincipalComponentAnalysis:
+    SingularValueDecomposition:
+    GaussianRandomProjection:
+    SparseRandomProjection:
+    MultiDimensionalScaling:
+    ISOMAP:
+    LinearLocalEmbedding:
+    Mini-BatchDictionaryLearning:
+    AutoEncoder:
+
+  # Minimale Clusteranzahl für Sanity-Check
+  min_number_of_clusters: 2
+  # Maximale Clusteranzahl für Sanity-Check
+  max_number_of_clusters: 8
+  # Minimale, relative Clustergröße für Sanity-check
+  min_rel_cluster_size: 0.05
+
+  # Liste der zu untersuchenden von Ziel-Clusteranzahlen
+  target_number_of_clusters:
+    #- 2
+    - 3
+    - 4
+    - 5
+    #- 6
+
+  # Liste der zu untersuchenden von Clusterverfahren
+  clustering:
+    k-Means:
+    TwoMeans:
+    AgglomerativeClustering:
+    SpectralClustering:
+    Linkage:
+    BIRCH:
+    GaussianMixture:
+    #
+    OPTICS:
+    MeanShift:
+    DBSCAN:
+    AffinityPropagation:
+
+  # Liste der zu untersuchenden von Cluster-Differenz-Metriken
+  cluster_evaluation:
+    #Saturated_Pairwise_Mean:
+    #Pairwise_Median:
+
+    # stage 1 - intra cluster feature vector aggregator (Mean, Median);
+      # set of feature values -> scalar value
+      # compresses the element values of a single feature to a single value
+      # in this way, a single feature vector is created, representing the elements of a cluster
+    # stage 2 - intra cluster feature diff_scaling (Const, Fade);
+      # feature difference as scalar value -> scaled value
+      # defines how the scale of a feature goes into the overall comparison of 2 clusters
+      # in this way, the difference of 2 "averaged" feature values (from 2 clusters) are scaled as, 1 vs 2 can be considered as more
+      #   different than 101 vs 102
+    # stage 3 - inter cluster feature comparator (AbsDiff, RelDiff)
+      # 2 (avereraged) feature value (from two clusters) -> scalar value as differnce
+      # defines how to compare single (aggregated) feature values
+      # for a cluster compare this is done for every feature, and returns a vector of differences for 2 clusters
+      # this vectors is shown in blue/red cluster_feature_compare
+    # stage 4 - inter cluster difference aggregation (Mean, Median)
+      # diff vector -> diff value (scalar)
+      # compresses a diff vector to a single value for 2 clusters
+      # this is done for every cluster pair within a clustering
+      # the weighted average is the overall cluster diff metric, shown in the clustering overview and serving as metric
+      #   how different the clusters are in summary
+
+    # Remark: RelDiff = max(|x|+1, |y|+1) / min(|x|+1, |y|+1)
+
+    #StagedClusterEvaluator1:
+    #  stage1: Mean
+    #  stage2: Fade
+    #  stage3: AbsDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator2:
+    #  stage1: Median
+    #  stage2: Fade
+    #  stage3: AbsDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator3:
+    #  stage1: Mean
+    #  stage2: Const
+    #  stage3: AbsDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator4:
+    #  stage1: Median
+    #  stage2: Const
+    #  stage3: AbsDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator5:
+    #  stage1: Mean
+    #  stage2: Fade
+    #  stage3: RelDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator6:
+    #  stage1: Median
+    #  stage2: Fade
+    #  stage3: RelDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator7:
+    #  stage1: Mean
+    #  stage2: Const
+    #  stage3: RelDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator8:
+    #  stage1: Median
+    #  stage2: Const
+    #  stage3: RelDiff
+    #  stage4: Mean
+
+    #StagedClusterEvaluator9:
+    #  stage1: Mean
+    #  stage2: Fade
+    #  stage3: AbsDiff
+    #  stage4: Median
+
+    #StagedClusterEvaluator10:
+    #  stage1: Median
+    #  stage2: Fade
+    #  stage3: AbsDiff
+    #  stage4: Median
+
+    #StagedClusterEvaluator11:
+    #  stage1: Mean
+    #  stage2: Const
+    #  stage3: AbsDiff
+    #  stage4: Median
+
+    #StagedClusterEvaluator12:
+    #  stage1: Median
+    #  stage2: Const
+    #  stage3: AbsDiff
+    #  stage4: Median
+
+    #StagedClusterEvaluator13:
+    #  stage1: Mean
+    #  stage2: Fade
+    #  stage3: RelDiff
+    #  stage4: Median
+
+    #StagedClusterEvaluator14:
+    #  stage1: Median
+    #  stage2: Fade
+    #  stage3: RelDiff
+    #  stage4: Median
+
+    StagedClusterEvaluator15:
+      stage1: Mean
+      stage2: Const
+      stage3: RelDiff
+      stage4: Median
+
+    #StagedClusterEvaluator16:
+    #  stage1: Median
+    #  stage2: Const
+    #  stage3: RelDiff
+    #  stage4: Median
+
+
+
+
+
+  # Anzahl der besten Ergebnisse, die detailiert ausgegeben werden
+  max_number_of_results: 20
+
+  # Mininmaler Feature-Unterschied für Cluster_Feature_Compare-Barchart
+  visualization_min_single_cluster_diff: 0.1
+
+  # export the cluster assignment foreach elemente and cluster result in a separated file
+  export_detailed_cluster_assignments: true
+
+  # Random Seed für Pseudo-Zufallsgeneratoren
+  random_seed: 2
+  # Anzahl Durchläufe ingesamt
+  runs_per_config: 1
+
+#other:
+#  <<: *baseline

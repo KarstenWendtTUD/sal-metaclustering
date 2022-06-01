@@ -1,0 +1,52 @@
+# randomness
+random_seed: 1
+
+# paths
+supervised_ML_config: "config/training/unsupervised/grid_search.yml"
+clusterings: "reports/unsupervised/meta_clustering/element_cluster_assignments.csv"
+qualities: "reports/unsupervised/meta_clustering/experiment_comparison.csv"
+#elements: "data/processed/salamlcg.csv"
+elements: "data/processed/sal.csv"
+
+# bei elements ASXL1 known wählen!
+# damit der Laden hier funktioniert, muss in reports ein Ordner namens meta_clustering angelegt werden
+# vorher muss eine grid search gelaufen sein, auf der das meta clustering durchgeführt werden kann
+# bei dieser grid search entstehen zwei csv namens element_cluster_assignments und experiment_comparison
+# diese müssen in den Ordner meta_clustering gelegt werden
+# diese yml greift dann auf den Ordner zu und führt das meta clustering auf diesen beiden csvs durch
+
+# filtering
+filter_name: "cluster_diff_metric"
+min_filter_threshold : 1.06
+
+# transformation / dim reduction
+# hier kann immer nur ein Transformationsverfahren gewählt werden
+target_dimensionality: 3
+transformation: PrincipalComponentAnalysis
+#transformation: IncrementalPrincipalComponentAnalysis
+#transformation: SparsePrincipalComponentAnalysis
+#transformation: SingularValueDecomposition
+#transformation: GaussianRandomProjection
+#transformation: SparseRandomProjection
+#transformation: MultiDimensionalScaling
+#transformation: ISOMAP
+#transformation: LinearLocalEmbedding
+#transformation: Mini-BatchDictionaryLearning
+#transformation: AutoEncoder
+
+# clustering
+# clustering
+# Cluster-Anzahl richtet sich nach Epsilon; Sweet Spot hier wahrscheinlich zwischen 0.1 - 0.5
+# Cluster-Verfahren, die hier gewählt sind, brauchen keine fest vorgegebenen Anzahlen von Clustern
+# hier kann pro run immer nur ein Clustering gewählt werden
+epsilon: 0.2
+#clustering: OPTICS
+clustering: MeanShift
+#clustering: DBSCAN
+#clustering: AffinityPropagation
+
+# Hier kann KEINE Broad Search automatisiert erfolgen, sondern muss manuell getestet werden! 
+
+# Befehl zum Starten: 
+#python scripts\perform_meta_clustering.py `
+#config\training\unsupervised\meta_clustering.yml

@@ -1,0 +1,57 @@
+asxl1_known:
+  filter_query: ASXL1_unknown == 0
+
+  preprocessor:
+    OSTM:
+      dichotomization:
+        # Months
+        threshold: 24
+
+    ECOG:
+      missing_indicator:
+        suffix: unknown
+      imputer:
+        strategy: median
+
+    nominal:
+      imputer:
+        strategy: constant
+        fill_value: unknown
+
+    discrete:
+      missing_indicator:
+        suffix: unknown
+      imputation:
+        strategy: median
+
+    continuous:
+      imputation:
+        strategy: median
+
+mean_imputation:
+  preprocessor:
+    ECOG:
+      imputer:
+        strategy: mean
+
+    discrete:
+      imputation:
+        strategy: mean
+
+    continuous:
+      imputation:
+        strategy: mean
+
+flag_missing:
+  preprocessor:
+    ECOG:
+      missing_indicator:
+        suffix: missing
+
+    nominal:
+      imputer:
+        fill_value: missing
+
+    discrete:
+      missing_indicator:
+        suffix: missing
