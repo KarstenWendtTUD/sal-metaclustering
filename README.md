@@ -632,3 +632,173 @@ Thus, features with large differences between clusters are interesting candidate
 
 So this chart visualizes the differences of the clusters with respect to the comparison features, i.e. the red features from the cluster comparison.
 
+
+
+
+## Use
+
+The following sections describe the usage of the prototypical implementation.
+
+### Source Code
+
+All sources, data and documentation relevant for the prototype are located in the repository. The prerequisite to use the project is a Python installation of version 3.8 3.
+
+The SAL dataset is located in its raw form in data/external/sal.csv. The preprocessed version is located in data/interim/typed_view.csv. If the data basis changes the way of preprocessing has to be done separately.
+
+The documentation of the project was created with the Python documentation generator Sphinx. A detailed tutorial in its use is provided by Brandon Rhodes.
+
+
+### Configuration
+
+The configuration of the prototype is done in YAML format 6. Three different structures are distinguished:
+
+#### Feature generation
+
+The config/build_features.yml file is used for the configurations of the generation (coding, imputation) of features from the preprocessed SAL dataset. It basically describes the parameters for the sub-pipeline in sal.features.DefaultColumnTransformer.
+
+Line 1 of the configuration describes the name of a configuration, here "default". A variant of this can be found in line 9 ("mean_imputation"). A separate feature record is created for each configuration. In the code examples the configuration of the ECOG attribute is shown. In this way, different preprocessing strategies can be specified for different attributes.
+
+The names and value ranges of the parameters, such as suffix or strategy can be found in the implementation section and in the sklearn Python library. The following classes are used in the pipeline of the DefaultColumnTransformer:
+
+* MissingValuesIndication
+* BinaryNominalEncoder
+* SimpleImputer
+* OneHotEncoder
+* OrdinalEncoder
+
+
+#### Supervised Learning Models
+
+The configurations of the supervised learning models are differentiated according to classification and regression problems. For each of the learning objectives there is a separate file. The documentation of overridden parameters can be found as comments in the files themselves.
+
+Learning objectives and model configurations:
+
+* CR1: config/training/supervised/classification/cr1.yml
+* ELNRisk: config/training/supervised/classification/eln-risk.yml
+* EFSTM: config/training/supervised/regression/efstm.yml
+* OSTM: config/training/supervised/regression/ostm.yml
+* RFSTM: config/training/supervised/regression/rfstm.yml
+
+Variable parameters (params) of the respective model (type) are documented on the sklearn pages. A list of supported models can also be found in sal.models.model_factory_mapping.
+
+#### Grid-Search (Unsupervised ML)
+
+The configuration of the grid search is done analog to the definition of the supervised ML via the configuration file grid_search.yml
+
+Single experiments can also be defined there.
+
+A description of the models which parameterize these configurations can be found under Unsupervised.
+
+#### Inheritance for configuration variants
+
+The configuration variants are prepared for an inheritance of the parameters. The following excerpt shows at the example of CR1 a baseline and a possible other configuration. The latter would have to define only parameters, which are to be different to the baseline. By this structure it is possible to describe different model configurations efficiently, by describing only the specialization in the derivation.
+
+### Execution
+
+The files located in the scripts folder control the individual steps of the ML pipeline:
+
+* typed_view_from_raw_data.sql: SQL database script for preprocessing, usually does not need to be executed
+* build_features.py: build a feature dataset as a corpus for the models
+* train_supervised_classification_models.py: Training and evaluation of the classification models according to the configuration
+* train_supervised_regression_models.py: Training and evaluation of the regression models according to configuration
+* perform_UL_experiments.py: Execute a grid search (transformation, clustering, evaluation) for unsupervised ML models according to the configuration.
+
+Assuming that the current working directory of the Windows or Linux shell corresponds to the root of the project, their operation is explained in detail below.
+
+#### Create feature dataset
+
+To generate the feature dataset and variants (cf. sections Features), the script build_features.py needs the path to the data (data/interim/typed_view.csv, cf. section Preprocessing) and a directory for the output.
+
+Create feature dataset in Linux bash shell:
+~~~
+python scripts/build_features.py \
+    data/interim/typed_view.csv \
+    data/processed/
+~~~
+Create feature dataset in Windows PowerShell:
+~~~
+python scripts\build_features.py `
+    data\interim/typed_view.csv `
+    data\processed\
+~~~
+Each variant described in the configuration file (config/build_features.yml), creates a CSV file with the data suitable for the experiment with execution of one of the above commands.
+
+#### Train and evaluate supervised learning models
+
+For training and evaluation of the models a feature dataset (e.g. data/processed/default.csv), as well as a confuration file (e.g. config/training/supervised/classification/cr1.yml) are needed.
+
+Training and evaluation of classification models with Linux Bash-Shell
+~~~
+python scripts/train_supervised_classification_models.py \
+    data/processed/default.csv \
+    config/training/supervised/classification/cr1.yml
+~~~
+
+Training and evaluation of classification models with Windows PowerShell
+
+~~~
+python scripts\train_supervised_classification_models.py `
+    data\processed\default.csv `
+    config\training\supervised\classification\cr1.yml
+~~~
+
+After executing one of the two commands, a folder is created under reports for each target variable (cf. configuration: label_column_name: CR1_Y). Within this folder, folders are created for each experiment variant, in which files of the following meaning are finally located.
+
+Meaning of the files of the report for the CR1 classification problem:
+* comparison.csv: tabular comparison of the performance
+* comparison.png: graphical comparison of performance
+* feature_support.csv: tabular comparison of feature selection
+* naive_Bayes.png: graphical report on Naive Bayes performance
+
+Analogous to this execution, the script train_supervised_regression_models.py is used for regression problems.
+
+#### Perform Unsupervised Learning Experiment
+
+For training and evaluation of the models, a feature dataset (e.g. data/processed/flag_missing.csv), as well as the confutation file (config/training/supervised/classification/cr1.yml) are needed.
+
+Training and evaluation of UL models with Linux Bash-Shell
+~~~
+python scripts/perform_UL_experiments.py \
+    data/processed/flag_missing.csv \
+    config/training/unsupervised/grid_search.yml
+~~~
+
+Training and evaluation of UL models with Windows PowerShell
+
+~~~
+python scripts\perform_UL_experiments.py `
+    data\processed\flag_missing.csv `
+    config\training\unsupervised/grid_search.yml
+~~~
+
+The results of the grid searches are stored in the reports/unsupervised directory. For each search, a directory is created according to the current date and time in order to be able to efficiently execute several searches in succession or in parallel. The directories have the structure YY-MM-DD/HH-MM-SS.
+
+Within a directory the Top-X results are stored separately and a summary of the grid search. The number of stored single results is in the configuration and is in each case in a separate subdirectory. The quality of the single result is defined by the Specific Cluster Difference Metric and thus determines the Top-X candidates.
+
+* experiment_comparison.csv: tabular comparison of experiments according to evaluation criteria
+* experiment_comparison.png: visualization of experiment comparison
+* X/transposition.png: visualization of a single transformation
+* X/clustering.png: Visualization of a single clustering
+* X/clustering_overview.txt: textual report of a single experiment regarding target features/attributes
+* X/cluster_target_features.png: visualization of cluster differences with respect to target features/attributes
+* X/cluster_feature_compare.png: Visualization of pairwise cluster comparisons of all features according to spec. diff. metric
+* X/cluster_i.csv: tabular listing of all elements with attributes/features of cluster i
+
+#### Perform Meta Clustering Experiment
+
+Multiple clustering result can be merged into a single clustering, this process is called meta clustering. For this purpose for each data item the different cluster IDs (of the different runs) are treated as new features. The original features are dropped. In that way, data items with a majority of equal cluster IDs become more similar than others. The actual mete clustering is perfomed in a similar way to a normal single clustering step (transposition, clustering). 
+
+The configuration is located in a single config file meta_clustering.yml and can be used as the following:
+
+Training and evaluation of classification models with Linux Bash-Shell
+~~~
+python scripts/perform_meta.py \
+    config/training/unsupervised/meta_clustering.yml
+~~~
+
+Training and evaluation of classification models with Windows PowerShell
+
+~~~
+python scripts\perform_meta.py `
+    config\training\unsupervised/meta_clustering.yml
+~~~
