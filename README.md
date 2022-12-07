@@ -4,9 +4,9 @@ The software framework explores the evaluation of machine learning (ML) predicti
 
 ## Analysis
 
-Based on a feasibility study conducted in advance, the data of the SAL dataset is preprocessed and different ML models are trained as examples. Thereby, different target metrics are given as learning objectives for Supervised ML, or given as comparison metrics for Unsupervised ML. The investigation, or software framework, therefore focuses classification and cluster analysis techniques from established ML technologies to gain a new view on the data, beyond the usual metrics (scores, e.g. ELN 2017), or to test new theses.
+Based on a feasibility study conducted in advance, the data of the SAL dataset is preprocessed and different ML models are trained as examples. Thereby, different target metrics are given as learning objectives for Unsupervised ML. The investigation, or software framework, therefore focuses classification and cluster analysis techniques from established ML technologies to gain a new view on the data, beyond the usual metrics (scores, e.g. ELN 2017), or to test new theses.
 
-The intended outcome is an exemplary supervised- and unsupervised-ML-based analysis and, in particular, a process that can be adapted and refined by clinicians after the project is completed, providing a starting point for many more data-driven investigations.
+The intended outcome is an exemplary unsupervised-ML-based analysis and, in particular, a process that can be adapted and refined by clinicians after the project is completed, providing a starting point for many more data-driven investigations.
 
 In the following sections, the problem described is captured and analyzed. The provided data set is examined, i.e., the shape is captured and relevant target variables and attributes / features are filtered. Subsequently, the features and learning objectives are analyzed individually, i.e. examined for information content, meaningfulness and completeness. These static findings form the basis for further machine-aided analysis.
 
@@ -22,19 +22,10 @@ The findings will be exploited primarily in scientific publications.
 
 #### Type of learning system
 
-The prototype supports experiments on classification, regression, and clustering with dimension reduction. The specific learning goals are addressed by Supervised ML methods. Clustering, in conjunction with dimension reduction, is intended to enable the discovery of new relationships. For this purpose, freely configurable comparison metrics for clusters are provided.
+The prototype supports experiments on clustering with dimension reduction. Clustering, in conjunction with dimension reduction, is intended to enable the discovery of new relationships. For this purpose, freely configurable comparison metrics for clusters are provided.
 
 #### Measuring prediction qualities
 
-The quality of the classification algorithms is measured by the following metrics:
-
-    F1-Score
-
-    Precision
-
-    Recall
-
-The quality of the regression algorithms is measured by the RMSE.
 
 The quality of the clustering algorithms is measured by cluster compare metrics and additionally output as general, so-called internal metrics (without ground truth).
 
@@ -45,7 +36,7 @@ The hematology department of the UKD provides a data set (SAL data) in the form 
 
 #### Learning objectives
 
-The learning objectives (labels) are included in the data, specifically:
+Potential learning objectives (labels) are included in the data, specifically:
 
 Overall Survival Time (OSTM, months).
 
@@ -205,13 +196,6 @@ Therefore, the parts / modules provided in this project include:
 
 * result evaluation and visualization.
 
-The pipeline used here for supervised-ML procedures (classification and regression) is structured as follows:
-
-* Data import
-* Feature Selection / Filtering / Transformation & Scaling
-* Model Construction and Optimization (Training)
-* Evaluation & Visualization
-
 The pipeline used here for Unsupervised ML methods (clustering) is structured as follows:
 
 * Data import
@@ -220,7 +204,7 @@ The pipeline used here for Unsupervised ML methods (clustering) is structured as
 * Model Construction and Optimization (Training)
 * Evaluation & Visualization
 
-Thus, the pipelines are similar and therefore share common software components. These are described below:
+Thus, the pipelines consist of common software components. These are described below:
 
 ### Features
 
@@ -263,18 +247,6 @@ Feature selection is used in two different places:
 
 Before the original data is converted, attributes defined as irrelevant, constant attributes (units and the like) and those with low information content are to be filtered out. The implementation is performed by sal.features.selection.DefaultAttributeSelector and is located in sal.features.selection.drop_irrelevant_attributes(), sal.features.selection.drop_constant_attributes() and sal.features.selection.drop_features_with_low_information_gain().
 
-##### Dynamic selection
-
-Once the dataset has been generated by the pipeline, the remaining features are subjected to tests for fitness with respect to a specific target. For example, the correlation between a learning goal such as CR1 and each feature can be calculated. Then, if a certain threshold is exceeded, the algorithm by definition supports the feature with respect to its expressiveness. The following methods are used for this purpose:
-
-* Correlation
-* ꭓ²-Test
-* Recursive feature elimination
-* Lasso regularization
-* Random-Forest Ranking
-
-A table is then calculated with the truth value as the product of method and feature. A threshold for the number of supporting algorithms is set in the configuration and decides which features are included in the training.
-
 
 #### Feature Engineering
 
@@ -298,78 +270,6 @@ The attributes D16BMB and EFSTM can also be partially freed from outliers using 
 ### Models
 
 The models and meta-models implemented or used are described below.
-
-
-#### Supervised
-
-After the feature dataset is fixed, the following steps are processed by the scripts for Supervised ML models. The implementation is in the methods sal.models.supervised.conduct_classification_experiment() and sal.models.supervised.conduct_regression_experiment().
-
-1. Loading a variant of the features
-2. Removing datasets with unknown learning target (these are stored under data/processed/<learning target>_unknown.csv)
-3. Splitting the data into training and test sets
-4. Scaling of the data
-5. Selection of the optimal feature set
-6. for all models:
-    * Perform ten-fold cross-validation 1
-    * Storing performance by test set in numbers and visualizations
-
-The differences between classification and regression algorithms are described below.
-
-##### Classification models
-
-For classification problems, stratified randomization is used in step three (see above) because the number of data sets differs greatly in the classes to be predicted (unbalanced data). Stratified randomization is also used in cross-validation in step six. The performance is mainly measured by the F1 score and is visible in four different visualizations.
-
-* Algorithms available in the configuration for classification problems:
-* GaussianNB: Gaussian Naive Bayes
-* LogisticRegression: Logistic Regression
-* XGBClassifier: Gradient Boosting
-* KNeighborsClassifier: k-nearest Neighbors
-* DecisionTreeClassifier: Decision Tree
-* RandomForestClassifier: Random Forest
-* MLPClassifier: Multi-Layer Perceptron
-* AdaBoostClassifier: AdaBoost
-* RidgeClassifier: Ridge
-* SVC: Support Vector
-* NuSVC: Nu-Support Vector
-* LinearSVC: Linear Support Vector
-* SGDClassifier: Linear Classifiers with Stochastic Gradient Decent
-* PassiveAggressiveClassifier: Passive Aggressive
-* QuadraticDiscriminantAnalysis: Quadratic Discriminant Analysis
-
-###### Class Imbalance
-
-In addition to stratified randomization, other approaches can be used to balance the data:
-
-* Downsampling (reduce number of majority class records).
-* Upsampling with SMOTE algorithm 2
-
-##### Regression models
-
-For regression problems, simple randomization is used in step three. The performance is mainly measured by the RMSE and is visible in three different visualizations.
-Algorithms for regression problems available in the configuration:
-
-* LinearRegression: Linear Regression
-* Ridge: Linear Regression with L2 Regularization
-* Lasso: Linear Model trained with L1 prior as regularizer
-* ElasticNet: Linear Regression with combined L1 and L2 priors as regularizer
-* Lars: Least Angle Regression
-* OrthogonalMatchingPursuit: Orthogonal Matching Pursuit
-* BayesianRidge: Bayesian ridge regression
-* ARDRegression: Bayesian ARD Regression
-* SGDRegressor: Linear Model fitted by minimizing a regularized empirical loss with SGD
-* PassiveAggressiveRegressor: Passive Aggressive Regression
-* RANSACRegressor: RANSAC (RANdom SAmple Consensus) algorithm
-* TheilSenRegressor: Theil-Sen Estimator: robust multivariate regression
-* HuberRegressor: Linear Regression Model that is robust to outliers
-* DecisionTreeRegressor: Decision Tree Regression
-* GaussianProcessRegressor: Gaussian Process Regression
-* MLPRegressor: Multi-Layer Perceptron Regression
-* KNeighborsRegressor: k-nearest Neighbors Regression
-* RadiusNeighborsRegressor: Regression based on Neighbors within a fixed radius
-* SVR: Support Vectors
-* NuSVR: Nu-Support Vectors
-* LinearSVR: Linear Support Vector Regression
-
 
 #### Unsupervised
 ##### Data transformation
@@ -514,52 +414,15 @@ The runs_per_config parameter in the grid_search.yml configuration defines the n
 
 Each degree of freedom of the grid search increases the search space by a factor, so such a search must be well planned.
 
+##### Meta-Clustering as a meta-model
+
+To merge different single clustering results and to cope the impact of different (arbirtary) unsupervised configurations, so called meta-clusterings can be performed. For this purpose, the assigned cluster indices for each data element and single clustering run are interpreted as new feature, transforming the entirety of clustering result to a new data space and replacing the original features. To filter clusterings of low quality, different filters (see configuration below) can be utilized.
+
+The actual meta-clustering is carried out in the same manner as the grid search as described above, covering and investigating a large solution space.
 
 ### Visualization
 
 The visualizations generated by the execution are described below.
-
-#### Supervised Learning
-##### Classification
-
-The following visualizations are used to support the evaluation of classifiers.
-
-###### Confusion matrix
-
-This table compares predicted classes (Predicted Class) with the actual ones (True Class). This makes visible to what absolute extent the classifier has decided correctly or incorrectly.
-
-###### Classification Report
-
-The classification report presents the metrics Precision, Recall, and their weighted harmonic mean (F1 score) for the individual classes. The example above shows that 78% of the data sets classified with "N" are actually assigned to this class. Furthermore, it shows that 90% of the records classified with "N" were found by the classifier.
-
-###### Precision-Recall-Curve
-
-The graph shows the trade-off between the accuracy (Precision), and the completeness (Recall) of a classifier. The average accuracy (Avg. Precision) expresses the curve in a single number representing the area under the curve. When choosing a classifier, an attempt is made to maximize both accuracy and completeness.
-
-###### ROC curve
-
-A Receiver Operating Characteristic (ROC) graph allows the user to visualize the trade-off between the sensitivity and specificity of the classifier. Receiver Operating Characteristic (ROC) is a measure of the predictive quality of a classifier. The graph shows the rate of true positives on the Y-axis and the rate of false positives on the X-axis, both as a global average and per class. The ideal point is the upper left corner of the graph.
-
-Another metric is provided by the area under the curve (AUC), which is a quantification of the relationship between false positives and actual positives. In general, the higher the AUC, the better the model.
-
-##### Regression
-
-When evaluating regressors, the following visualizations are used in a supportive manner.
-
-###### Residual diagram
-
-Residuals describe the difference between the observed value of the target variable (y) and the predicted value (ŷ), i.e., the error of the prediction. The errors are normally distributed for a fitted model. If patterns are apparent, the model must be adjusted.
-
-###### Prediction error
-
-A prediction error plot shows the observed values of the target variable (y) from the data set against the predicted values generated by our model (ŷ). This reveals the variance present in the model. The coefficient of determination (R²) describes the goodness of fit of the model.
-
-###### Learning curve
-
-The learning curve describes a relationship between the training and cross-validation metrics (e.g. RMSE) with respect to a variable number of training examples. Among other things, it can be shown how much the model benefits from larger data sets - convergence with respect to fitting is achieved.
-
-The curves are plotted with the mean values. Variability during cross-validation is indicated by the shaded areas representing the standard deviations above and below the mean for all cross-validations. If the model suffers from errors due to bias, the variability around the training curve is likely to be larger. If the model has errors due to variance, there is greater variability around the cross-validated score.
-
 
 ### Unsupervised Learning
 
@@ -667,20 +530,6 @@ The names and value ranges of the parameters, such as suffix or strategy can be 
 * OrdinalEncoder
 
 
-#### Supervised Learning Models
-
-The configurations of the supervised learning models are differentiated according to classification and regression problems. For each of the learning objectives there is a separate file. The documentation of overridden parameters can be found as comments in the files themselves.
-
-Learning objectives and model configurations:
-
-* CR1: config/training/supervised/classification/cr1.yml
-* ELNRisk: config/training/supervised/classification/eln-risk.yml
-* EFSTM: config/training/supervised/regression/efstm.yml
-* OSTM: config/training/supervised/regression/ostm.yml
-* RFSTM: config/training/supervised/regression/rfstm.yml
-
-Variable parameters (params) of the respective model (type) are documented on the sklearn pages. A list of supported models can also be found in sal.models.model_factory_mapping.
-
 #### Grid-Search (Unsupervised ML)
 
 The configuration of the grid search is done analog to the definition of the supervised ML via the configuration file grid_search.yml
@@ -723,34 +572,6 @@ python scripts\build_features.py `
 ~~~
 Each variant described in the configuration file (config/build_features.yml), creates a CSV file with the data suitable for the experiment with execution of one of the above commands.
 
-#### Train and evaluate supervised learning models
-
-For training and evaluation of the models a feature dataset (e.g. data/processed/default.csv), as well as a confuration file (e.g. config/training/supervised/classification/cr1.yml) are needed.
-
-Training and evaluation of classification models with Linux Bash-Shell
-~~~
-python scripts/train_supervised_classification_models.py \
-    data/processed/default.csv \
-    config/training/supervised/classification/cr1.yml
-~~~
-
-Training and evaluation of classification models with Windows PowerShell
-
-~~~
-python scripts\train_supervised_classification_models.py `
-    data\processed\default.csv `
-    config\training\supervised\classification\cr1.yml
-~~~
-
-After executing one of the two commands, a folder is created under reports for each target variable (cf. configuration: label_column_name: CR1_Y). Within this folder, folders are created for each experiment variant, in which files of the following meaning are finally located.
-
-Meaning of the files of the report for the CR1 classification problem:
-* comparison.csv: tabular comparison of the performance
-* comparison.png: graphical comparison of performance
-* feature_support.csv: tabular comparison of feature selection
-* naive_Bayes.png: graphical report on Naive Bayes performance
-
-Analogous to this execution, the script train_supervised_regression_models.py is used for regression problems.
 
 #### Perform Unsupervised Learning Experiment
 
