@@ -1,0 +1,276 @@
+cluster: &baseline
+  # Ziel: vollständige Remission erreicht
+  label_column_name: Cluster
+
+  # Namen der Werte des Ziels
+  label_values:
+    - 0
+    - 1
+    - 2
+    - 3
+
+  # Anzahl der Top-Features für die Selektion
+  top_feature_count: 74
+
+
+  # Minimaler Feature Support für die Selektion
+  top_feature_support_min: 0.1
+
+  # Ausgeschlossene Features
+  drop:
+    - D16BMB # angenommen wir sind nicht schon am Tag 16 vorbeigekommen
+    - IT1STDTC # ungeachtet des absoluten Beginns der Induktionsther.
+    - CD34
+    - CD34U
+    - CD34SRC
+
+    # fehlt in AMLCG
+    - FLT3.TKD_Y
+
+    # Klassifikationen
+    - Cluster
+    - ELNRisk
+    - ECOG
+    - FAB
+    - WHO
+    - CGELN
+    - CGSTUD
+    - ELNRisk
+    - ECOG
+    - FAB
+    - WHO
+    - CGELN
+    - CGSTUD
+    - CD34
+    - CD34SRC_all cells
+    - CD34SRC_blast gate
+    - CD34SRC_unknown
+    - AMLSTAT_unknown
+    - EXAML_unknown 
+    - FLT3I_unknown
+    - BMB_unknown
+    - CEBPA_unknown
+    - FLT3T_unknown
+    - FLT3T_Y
+    - IKZF1_Y
+    - IDH1T_unknown
+    - smCEBPA_unknown
+    - dmCEBPA_unknown
+    - GATA1_unknown
+    - GATA2_unknown 
+    - CEBPA.bZIP_unknown
+    - CEBPA.TAD2_unknown
+    - CEBPA.TAD1_unknown
+    - IDH2T_unknown
+    - CGCX_unknown
+    - CEBPASTAT_unknown
+    - CEBPADM_unknown
+    - ASXL1_unknown
+    - BCORL1_unknown
+    - BCOR_unknown
+    - CALR_unknown
+    - CEBPA.NGS_unknown
+    - DNMT3A_unknown
+    - CGNK_unknown
+    - EZH2_unknown
+    - EZH2_N
+    - FEV_unknown
+    - FLT3.ITD_unknown
+    - FLT3.TKD_unknown
+    - IDH1_unknown
+    - IDH2_unknown
+    - KIT_unknown
+    - KRAS_unknown
+    - NPM1_unknown
+    - NPM1.NGS_unknown
+    - PBB_unknown
+    - PHF6_unknown
+    - PTPN11_unknown
+    - RAD21_unknown
+    - RUNX1_unknown
+    - SF3B1_unknown
+    - STAG2_unknown
+    - TET2_unknown
+    - TP53_unknown
+    - WT1_unknown
+    - TP53_N
+    - FLT3T_N
+    - NPM1.NGS_N
+    - U2AF1_N
+    - U2AF1_unknown
+    - CEBPADM_N
+    - BRAF_N
+    - NPM1_N
+    - IKZF1_unknown
+    - IKZF1_N
+    - ASXL1_N
+    - RUNX1_N
+    - CGNK_N
+    - CGCX_N
+    - dmCEBPA_N
+    - smCEBPA_N
+    - CEBPA.NGS_N
+    - SF3B1_N
+    - IDH1_N
+    - GATA1_N
+    - GATA2_N
+    - PTPN11_N
+    - CEBPA.TAD1_N
+    - CEBPA.TAD2_N
+    - ZRSR2_N
+    - ZRSR2_unknown
+    - FLT3I_N
+    - PTEN_N
+    - PTEN_unknown
+    - KIT_N
+    - TET2_N
+    - ATRX_unknown
+    - ATRX_N
+    - MPL_unknown
+    - MPL_N
+    - PHF6_N
+    - KRAS_N
+    - FLT3.ITD_N
+    - SRSF2_unknown
+    - SRSF2_N
+    - CALR_N
+    - WT1_N
+    - DNMT3A_N
+    - CUX1_unknown
+    - CUX1_N
+    - RAD21_N
+    - CDKN2A_N
+    - CKDN2A_unknown
+    - JAK2_unknown
+    - JAK2_N
+    - SMC3_unknown
+    - SMC3_N
+    - MYD88_unknown
+    - MYD88_N
+    - SETBP1_unknown
+    - SETBP1_N
+    - CEBPA.bZIP_N
+    - BCOR_N
+    - HRAS_unknown
+    - HRAS_N
+    - CBLB_N
+    - CBL_unknown
+    - CBL_N
+    - KDM6A_N
+    - KDM6A_unknown
+    - CSF3R_N
+    - CSFR3_unknown
+    - FBXW7_N
+    - FBXW7_unknown
+    - PDGFRA_unknown
+    - PDGFRA_N
+    - NRAS_unknown
+    - NRAS_N
+    - NOTCH1_unknown
+    - NOTCH1_N
+    - BCORL1_unknown
+    - BCORL1_N
+    - ETV6_unknown
+    - ETV6_N
+    - IDH2_N
+    - IDH2T_N
+    - IDH1T_N
+    - FLT3.TKD_N
+    - SMC1A_unknown
+    - SMC1A_N
+    - STAG2_N
+    - GNAS_unknown
+    - GNAS_N
+    - CBLB_unknown
+    - CEBPA_N
+    - SFRS2_N
+    - SFRS2_unknown
+    - BRAF_unknown
+    - BRAF
+    - ZRSR2
+    - CEBPA.NGS
+    - CEBPA.bZIP
+    - IHD2T_R140G
+    - IDH2T_R140G_N
+    - MYD88
+    - IDH2T_R140G_Y
+    - MYD88_Y
+    - MPL_Y
+    - MPL
+    - CEBPASTAT_WT
+    - CALR
+    - CALR_Y
+    - IDH1T_R132C
+    - IDH1T_R132C_N
+    - IDH1T_R132C_Y
+    - IDH1T_R132C_unknown
+    - IDH2T_R140G_unknown
+    - t(8;21)_N
+    - t(9;11)_N
+    - t(9;22)_N
+    - t(6;9)_N
+    - del5/5q_N
+    - del7_N
+    - del17_N
+    - IDH2T
+    - FIB
+    - CBLB
+    - EXAML_N
+    - CEBPAdm_Y
+    - CEBPASTAT_double
+    - IDH1T
+    - FIB_Y
+    - FIB_N
+    - FIB_unknown
+    - FEV_N
+    - CEBPADM_Y
+    - CEBPA_Y
+    - CEBPA_N
+    - FEV
+    - inv(16) or t(16;16)_N
+    - NPM1_Y
+
+  # Klassifikationsalgorithmen
+  classifiers:
+    naive_Bayes:
+      type: GaussianNB
+    logistische_Regression:
+      type: LogisticRegression
+      params:
+        max_iter: 8000
+    Gradient_Boosting:
+      type: XGBClassifier
+      params:
+        num_class: 4
+    # k-Nearest_Neighbors:
+    #   type: KNeighborsClassifier
+    # #Decision_Tree:
+    #   #type: DecisionTreeClassifier
+    Random_Forest:
+      type: RandomForestClassifier
+    # mult-Layer_Perceptron:
+    #   type: MLPClassifier
+    #   params:
+    #     max_iter: 12000
+    # AdaBoost:
+    #   type: AdaBoostClassifier
+    # #Ridge:
+    #   #type: RidgeClassifier
+    # lineare_SVM:
+    #   type: SVC
+    #   params:
+    #     kernel: linear
+    #     probability: True
+    # RBF-SVM:
+    #   type: SVC
+    #   params:
+    #     kernel: rbf
+    #     probability: True
+    # polynomiale_SVM:
+    #   type: SVC
+    #   params:
+    #     kernel: poly
+    #     degree: 3
+    #     probability: True
+    #passive_aggressive:
+      #type: PassiveAggressiveClassifier
